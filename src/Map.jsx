@@ -46,10 +46,28 @@ const Map = () => {
   useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
-        setCurrentLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
+        const { latitude, longitude } = position.coords;
+        setCurrentLocation({ lat: latitude, lng: longitude });
+
+        // Calculate distance and ETA to the next stop
+        const distance = calculateDistance(
+          { lat: latitude, lng: longitude },
+          stops[nextStop]
+        );
+        // const time = distance / averageSpeed;
+        // setDistanceToNextStop(distance);
+        const numericDistance = parseFloat(distance);
+        const time = numericDistance / averageSpeed;
+        setDistanceToNextStop(numericDistance);
+        console.log("time", time, averageSpeed, distance);
+        setTimeToNextStop(time.toFixed(2));
+
+        // Check if the driver has reached the next stop
+        if (distance < 0.1) {
+          setNextStop((prevIndex) =>
+            prevIndex < stops.length - 1 ? prevIndex + 1 : prevIndex
+          );
+        }
       },
       (error) => console.error(error),
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
@@ -84,7 +102,7 @@ const Map = () => {
     }
   };
 
-  // Calculate the ETA for the next stop
+  // Calculate the ETA (estimated time of arrival) for the next stop
   const calculateETA = () => {
     if (currentLocation && nextStop < stops.length) {
       const distanceInMeters = getDistance(currentLocation, stops[nextStop]);
@@ -141,7 +159,7 @@ const Map = () => {
   if (!isLoaded) {
     return <div>Loading...</div>;
   }
-
+  console.log(currentLocation);
   return (
     <div className=" md:flex w-[100vw] h-[100vh]  bg-white">
       <div className="  md:hidden flex items-center  justify-between h-16 p-5   bg-gradient-to-r from-cyan-300 to-green-500  ">
@@ -199,6 +217,12 @@ const Map = () => {
           {stops.map((stop, index) => (
             <Marker key={index} position={stop} />
           ))}
+          {currentLocation && (
+            <Marker
+              position={currentLocation}
+              icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+            />
+          )}
           {currentLocation && (
             <Marker
               position={currentLocation}
