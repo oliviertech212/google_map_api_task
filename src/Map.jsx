@@ -23,22 +23,22 @@ const Map = () => {
   const [timeToNextStop, setTimeToNextStop] = useState(null);
 
   const [nextStopName, setNextStopName] = useState("");
-  // const stops = [
-  //   { lat: -1.939826787816454, lng: 30.0445426438232 }, // Starting Point: Nyabugogo
-  //   { lat: -1.9355377074007851, lng: 30.060163829002217 }, // Stop A
-  //   { lat: -1.9358808342336546, lng: 30.08024820994666 }, // Stop B
-  //   { lat: -1.9489196023037583, lng: 30.092607828989397 }, // Stop C
-  //   { lat: -1.9592132952818164, lng: 30.106684061788073 }, // Stop D
-  //   { lat: -1.9487480402200394, lng: 30.126596781356923 }, // Stop E
-  //   { lat: -1.9365670876910166, lng: 30.13020167024439 }, // Ending Point: Kimironko
-  // ];
-
   const stops = [
-    { lat: -1.9675632902588955, lng: 30.06715805248569 },
-    { lat: -1.963570990711944, lng: 30.060070967805924 },
-    { lat: -1.9646810122888905, lng: 30.062852408309627 },
-    { lat: -1.9566332658144245, lng: 30.064215796977617 },
+    { lat: -1.939826787816454, lng: 30.0445426438232 }, // Starting Point: Nyabugogo
+    { lat: -1.9355377074007851, lng: 30.060163829002217 },
+    { lat: -1.9358808342336546, lng: 30.08024820994666 },
+    { lat: -1.9489196023037583, lng: 30.092607828989397 },
+    { lat: -1.9592132952818164, lng: 30.106684061788073 },
+    { lat: -1.9487480402200394, lng: 30.126596781356923 },
+    { lat: -1.9365670876910166, lng: 30.13020167024439 }, // Ending Point: Kimironko
   ];
+
+  // const stops = [
+  //   { lat: -1.9675632902588955, lng: 30.06715805248569 },
+  //   { lat: -1.963570990711944, lng: 30.060070967805924 },
+  //   { lat: -1.9646810122888905, lng: 30.062852408309627 },
+  //   { lat: -1.9566332658144245, lng: 30.064215796977617 },
+  // ];
   const averageSpeed = 40; // average speed is 40 km/h
   const directionsService = useRef(null);
 
@@ -58,9 +58,9 @@ const Map = () => {
         // setDistanceToNextStop(distance);
         const numericDistance = parseFloat(distance);
         const time = numericDistance / averageSpeed;
-        setDistanceToNextStop(numericDistance);
-        console.log("time", time, averageSpeed, distance);
-        setTimeToNextStop(time.toFixed(2));
+        // setDistanceToNextStop(numericDistance);
+
+        // setTimeToNextStop(time.toFixed(2));
 
         // Check if the driver has reached the next stop
         if (distance < 0.1) {
@@ -217,12 +217,6 @@ const Map = () => {
           {stops.map((stop, index) => (
             <Marker key={index} position={stop} />
           ))}
-          {currentLocation && (
-            <Marker
-              position={currentLocation}
-              icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-            />
-          )}
           {currentLocation && (
             <Marker
               position={currentLocation}
